@@ -13,7 +13,7 @@
 <div class="container-fluid">
   <ul class="navbar-nav">
     <li class="nav-item">
-      <a class="nav-link text-light" href="/home">Tasks</a>
+      <a class="nav-link text-light" href="/admin/home">Tasks</a>
     </li>
   </ul>
 </div>
@@ -29,8 +29,8 @@
        <div class="row justify-content-center">
         <div class="col-sm-8">
           <div class="card mt-3 p-3">
-            <h3 class='text-muted'>Edit Task {{ $task->title }}</h3>
-          <form method="POST" action='/tasks/{{$task->id}}/update'>
+            <h3 class='text-muted'>Edit Task:- {{ $task->title }}</h3>
+          <form method="POST" action='/admin/{{$task->id}}/update'>
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -45,6 +45,13 @@
               <textarea name='description' class='form-control' rows='4'>{{ old('description',$task->description) }}</textarea>
               @if($errors->has('description'))
                 <span class='text-danger'>{{ $errors->first('description')}}</span>
+              @endif  
+            </div>
+            <div class="form-group">
+              <label>User Id</label>
+              <textarea name='user_id' class='form-control' rows='4'>{{ old('user_id',$task->user_id) }}</textarea>
+              @if($errors->has('user_id'))
+                <span class='text-danger'>{{ $errors->first('user_id')}}</span>
               @endif  
             </div>
             <div class="form-group">

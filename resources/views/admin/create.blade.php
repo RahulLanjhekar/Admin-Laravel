@@ -8,12 +8,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-sm bg-dark">
+  <nav class="navbar navbar-expand-sm bg-dark">
 
 <div class="container-fluid">
   <ul class="navbar-nav">
     <li class="nav-item">
-      <a class="nav-link text-light" href="/home">Tasks</a>
+      <a class="nav-link text-light" href="/admin/home">Tasks</a>
     </li>
   </ul>
 </div>
@@ -29,32 +29,37 @@
        <div class="row justify-content-center">
         <div class="col-sm-8">
           <div class="card mt-3 p-3">
-            <h3 class='text-muted'>Edit Task {{ $task->title }}</h3>
-          <form method="POST" action='/tasks/{{$task->id}}/update'>
+          <form method="POST" action='/admin/store'>
             @csrf
-            @method('PUT')
             <div class="form-group">
               <label>Title</label>
-              <input type="text" name='title' value="{{ old('title',$task->title) }}" class='form-control'>
+              <input type="text" name='title' value="{{ old('title') }}" class='form-control'>
               @if($errors->has('title'))
                 <span class='text-danger'>{{ $errors->first('title')}}</span>
               @endif  
             </div>
             <div class="form-group">
               <label>Description</label>
-              <textarea name='description' class='form-control' rows='4'>{{ old('description',$task->description) }}</textarea>
+              <textarea name='description' class='form-control' rows='4'>{{ old('description') }}</textarea>
               @if($errors->has('description'))
                 <span class='text-danger'>{{ $errors->first('description')}}</span>
               @endif  
             </div>
             <div class="form-group">
               <label>Due Date</label>
-              <input type="text" name='due_date' value="{{ old('due_date',$task->due_date) }}" class='form-control'>        
+              <input type="text" name='due_date' value="{{ old('due_date') }}" class='form-control'>        
               @if($errors->has('due_date'))
                 <span class='text-danger'>{{ $errors->first('due_date')}}</span>
               @endif      
             </div>
-            <button class='mt-2 btn btn-dark' type='submit'>Edit</button>
+            <div class="form-group">
+              <label>User Id</label>
+              <input type="text" name='user_id' class='form-control'>        
+              @if($errors->has('user_id'))
+                <span class='text-danger'>{{ $errors->first('user_id')}}</span>
+              @endif      
+            </div>
+            <button class='mt-2 btn btn-dark' type='submit'>Submit</button>
           </form>
           </div>
         </div>

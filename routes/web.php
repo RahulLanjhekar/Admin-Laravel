@@ -38,6 +38,12 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
    
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
-   
     Route::get('/admin/home', [AdminController::class, 'adminHome'])->name('admin.home');
+    Route::get('admin/{id}/show',[AdminController::class, 'show']);
+    Route::get('admin/{id}/edit',[AdminController::class, 'edit']);
+    Route::delete('admin/{id}/delete',[AdminController::class, 'delete']);
+    Route::get('admin/search',[AdminController::class, 'search']);
+    Route::get('admin/create', [AdminController::class, 'create']);
+    Route::post('admin/store', [AdminController::class, 'store']);
+    Route::put('admin/{id}/update',[AdminController::class, 'update']);
 });

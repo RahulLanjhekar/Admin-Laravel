@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use Mail;
 use App\Mail\NewMail;
+use App\Http\Requests\UserStoreRequest;
 
 
 class HomeController extends Controller
@@ -31,6 +32,8 @@ class HomeController extends Controller
         // $tasks = $user->is_Admin ? Task::latest()->get() : $user->tasks;
         // dd(Task::where('user_id', $user->id));
 
+        // dd(auth()->user()->email);
+
         return view('tasks.index', ['tasks' => $user->tasks]);
     }
 
@@ -38,29 +41,23 @@ class HomeController extends Controller
         return view('tasks.create'); 
     }
 
-    public function store(Request $request){
-        
-        $request->validate([
-            'title' => 'required | regex:/^[\pL\s]+$/u',
-            'description' => 'required | regex:/^[\pL\s]+$/u | max:255',
-            // 'due_date' => 'required'
+    public function store(UserStoreRequest $request){
+
+        $validated = $request->validated();
+
+        $ticket = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => auth()->id()
         ]);
-
-        $task = new Task;
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->user_id = auth()->id();
-        // $task->due_date = $request->due_date;
-
-        $task->save();
-
+        
         $mailData = [
             'title' => $request->title,
             'body' => $request->description
         ];
-
-        Mail::to('rahul@zethic.com')->send(new NewMail($mailData));
-        dd('Email sent!');
+        
+        Mail::to(auth()->user()->email)->send(new NewMail($mailData));
+        // dd('Email sent!');
         return back()->withSuccess('Product Created !!');
 
     }
@@ -87,13 +84,9 @@ class HomeController extends Controller
         return view('tasks.show', ['task' => $task]);
     }
 
-    public function update(Request $request, $id){
+    public function update(UserStoreRequest $request, $id){
         
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            // 'due_date' => 'required'
-        ]);
+        $validated = $request->validated();
 
         $task = Task::where('id',$id)->first();
 
