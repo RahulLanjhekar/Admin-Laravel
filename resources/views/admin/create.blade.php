@@ -47,7 +47,7 @@
             </div>
             <div class="form-group">
               <label>Due Date</label>
-              <input type="text" name='due_date' value="{{ old('due_date') }}" class='form-control'>        
+              <input type="date" name='due_date' value="{{ old('due_date') }}" class='form-control'>        
               @if($errors->has('due_date'))
                 <span class='text-danger'>{{ $errors->first('due_date')}}</span>
               @endif      

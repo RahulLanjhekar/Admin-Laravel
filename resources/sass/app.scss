@@ -6,3 +6,48 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+/* resources/css/app.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+.main-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FAF3F0 !important;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.search-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wrapping{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+    text-align: center;
+    justify-content: center;
+}
+
+.card-container{
+    margin: 20px;
+    background-color: #D4E2D4;
+    padding: 20px;
+    border-radius: 10px;
+    color: #BA704F;
+    width: 270px;
+}
+
+.inside-card{
+    margin: 20px;
+}
+.inside-card a{
+    color: #BA704F !important;
+}

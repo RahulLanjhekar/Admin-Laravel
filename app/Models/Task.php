@@ -10,9 +10,11 @@ class Task extends Model
 {
     use HasFactory, Sortable;
 
-    protected $fillable = [ 'title', 'description', 'user_id' ];
+    protected $fillable = [ 'title', 'description', 'user_id', 'due_date' ];
 
     public $sortable = ['id', 'title', 'description'];
+
+    protected $dates = ['due_date'];
 
     public function user(){
         return $this->belongsTo(User::class);

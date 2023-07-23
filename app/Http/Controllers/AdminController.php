@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 use Mail;
 use App\Mail\NewMail;
 use App\Http\Requests\AdminStoreRequest;
-
+use App\Jobs\SendEmailJob;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -18,7 +20,7 @@ class AdminController extends Controller
 
     public function adminHome()
     {
-        $tasks = Task::latest()->sortable()->paginate(4);
+        $tasks = Task::latest()->paginate(8);
         return view('admin.adminHome', ['tasks' => $tasks]);
     }
 
@@ -30,18 +32,28 @@ class AdminController extends Controller
         
         $validated = $request->validated();
 
+        $theDate = $request->due_date;
+
+        $carbonDate = Carbon::parse($theDate);
+       
         $ticket = Task::create([
             'title' => $request->title,
             'description' => $request->description,
             'user_id' => $request->user_id,
+            'due_date' => $carbonDate
         ]);
-
+        
         $mailData = [
             'title' => $request->title,
             'body' => $request->description
         ];
 
-        Mail::to('rahul@zethic.com')->send(new NewMail($mailData));
+        $address = User::where('id', $request->user_id)->first()->email;
+        // dd($theUser);
+
+        SendEmailJob::dispatch($mailData, $address);
+
+        // Mail::to('rahul@zethic.com')->send(new NewMail($mailData));
         return back()->withSuccess('Product Created !!');
 
     }
@@ -81,6 +93,15 @@ class AdminController extends Controller
         // $task->due_date = $request->due_date;
 
         $task->save();
+
+        $mailData = [
+            'title' => 'Task Updated',
+            'body' => 'The task '.($request->title ?? $task->title).' has been updated by the admin.'
+        ];
+
+        $address = User::where('id', ($request->user_id ?? $task->user_id))->first()->email;
+
+        SendEmailJob::dispatch($mailData, $address);
 
         return back()->withSuccess('Product Updated !!');
     }

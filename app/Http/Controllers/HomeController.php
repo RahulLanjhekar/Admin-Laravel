@@ -51,12 +51,12 @@ class HomeController extends Controller
             'user_id' => auth()->id()
         ]);
         
-        $mailData = [
-            'title' => $request->title,
-            'body' => $request->description
-        ];
+        // $mailData = [
+        //     'title' => $request->title,
+        //     'body' => $request->description
+        // ];
         
-        Mail::to(auth()->user()->email)->send(new NewMail($mailData));
+        // Mail::to(auth()->user()->email)->send(new NewMail($mailData));
         // dd('Email sent!');
         return back()->withSuccess('Product Created !!');
 
