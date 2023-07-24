@@ -45,10 +45,15 @@ class HomeController extends Controller
 
         $validated = $request->validated();
 
+        $theDate = $request->due_date;
+
+        $carbonDate = Carbon::parse($theDate);
+
         $ticket = Task::create([
             'title' => $request->title,
             'description' => $request->description,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
+            'due_date' => $carbonDate
         ]);
         
         // $mailData = [

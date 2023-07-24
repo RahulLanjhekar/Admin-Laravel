@@ -1,56 +1,66 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container bg-white">
+<div class="container main-container bg-white">
+<div class='search-div'>
+
         <div class="row py-2"></div>
         <div class="col-md-6">
-            <a href="tasks/create" class='btn btn-dark mt-2'>New Task</a>
+            <a href="tasks/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
         </div>
 
         <div class="col-md-6 mt-4 mb-2">
             <div class="form-group">
                 <form action="/tasks/search" method='get'>
-                    <div class="input-group">
+                    <div class="input-group flex">
                         <input type="text" class='form-control' name='search' placeholder='Search...' value="{{ isset($search) ? $search : '' }}">
-                        <button type='submit' class='btn btn-primary'> Search</button>
+                        <button type='submit' class='btn btn-primary top-btns'> Search</button>
                     </div>
                 </form>
             </div>
         </div>
+</div>
 
         <!-- @if(isset($search) && $search !== 'null')
         {{collect($tasks)->where('title','like',"%$search%") }}
         @endif  -->
 
-        <table class='table table-hover mt-2'>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+            <div class="wrapping flex flex-wrap">
                 @foreach($tasks as $task)
-                <tr>
-                    <!-- <td>{{ $loop->index + 1}}</td> -->
-                    <td>{{ $task->id}}</td>
-                    <td><a href="/tasks/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></td>
-                    <td>{{ $task->description}}</td>
-                    <td><a href="/tasks/{{$task->id}}/edit" class='btn btn-dark btn-sm'>Edit</a>
-                    <form method='POST' action="/tasks/{{$task->id}}/delete" class='d-inline'>
-                        @csrf
-                        @method('DELETE')
-                        <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
-                    </form>
-                </td>
-                </tr>
-                @endforeach
-            </tbody>
+           
+                    <div class="card-container">
+                        <div class="inside-card">
+                            <h2>Id:- {{ $task->id}}</h2>
+                        </div>
 
-        </table>
-       {{-- <!-- {{dd($search)}} -->--}}
+                        <div class="inside-card">
+                            <h2>Title</h2>
+                            <h2><a href="/tasks/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></h2>
+                        </div>
+
+                        <div class="inside-card">
+                            <h2>Description</h2>
+                            <h2>{{ $task->description}}</h2>
+                        </div>
+
+                        <div class="inside-card">
+                            <h3>Due Date:- {{ $task->due_date ?? 'null'}}</h3>
+                        </div>
+
+                        <div class="action-card">
+                            <h2>Action</h2>
+                            <a href="/tasks/{{$task->id}}/edit" class='btn btn-dark action-btns btn-sm'>Edit</a>
+                            <form method='POST' action="/tasks/{{$task->id}}/delete" class='d-inline'>
+                                @csrf
+                                @method('DELETE')
+                                <button type='submit' class='btn btn-danger action-btns btn-sm'>Delete</button>
+                            </form>
+                        </div>
+                </div>
+                @endforeach
+            </div>
+
+=       {{-- <!-- {{dd($search)}} -->--}}
       
     </div>
 @endsection

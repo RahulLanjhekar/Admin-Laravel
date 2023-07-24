@@ -5,15 +5,15 @@
     <div class='search-div'>
         <div class="row py-2"></div>
         <div class="col-md-6">
-            <a href="/admin/create" class='btn btn-dark mt-2'>New Task</a>
+            <a href="/admin/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
         </div>
 
-        <div class="col-md-6 mt-4 mb-2">
+        <div class="col-md-6 mb-2">
             <div class="form-group">
                 <form action="/admin/search" method='get'>
-                    <div class="input-group">
+                    <div class="input-group flex">
                         <input type="text" class='form-control' name='search' placeholder='Search...' value="{{ isset($search) ? $search : '' }}">
-                        <button type='submit' class='btn btn-primary'> Search</button>
+                        <button type='submit' class='btn btn-primary top-btns'> Search</button>
                     </div>
                 </form>
             </div>
@@ -43,16 +43,15 @@
                         </div>
 
                         <div class="inside-card">
-                            <h2>Due Date:- {{ $task->due_date ?? 'null'}}</h2>
+                            <h3>Due Date:- {{ $task->due_date ?? 'null'}}</h3>
                         </div>
 
                         <div class="action-card">
-                            <h2>Action</h2>
-                            <a href="/admin/{{$task->id}}/edit" class='btn btn-dark btn-sm'>Edit</a>
+                            <a href="/admin/{{$task->id}}/edit" class='btn action-btns btn-dark btn-sm'>Edit</a>
                             <form method='POST' action="/admin/{{$task->id}}/delete" class='d-inline'>
                                 @csrf
                                 @method('DELETE')
-                                <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
+                                <button type='submit' class='btn btn-danger action-btns btn-sm'>Delete</button>
                             </form>
                         </div>
                 </div>
