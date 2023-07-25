@@ -87,10 +87,14 @@ class AdminController extends Controller
 
         $task = Task::where('id',$id)->first();
 
+        $theDate = $request->due_date;
+
+        $carbonDate = Carbon::parse($theDate);
+
         $task->title = $request->title;
         $task->description = $request->description;
         $task->user_id = $request->user_id;
-        // $task->due_date = $request->due_date;
+        $task->due_date = $carbonDate;
 
         $task->save();
 

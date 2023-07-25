@@ -9,7 +9,7 @@
             <a href="tasks/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
         </div>
 
-        <div class="col-md-6 mt-4 mb-2">
+        <div class="col-md-6 mb-2">
             <div class="form-group">
                 <form action="/tasks/search" method='get'>
                     <div class="input-group flex">
@@ -20,7 +20,6 @@
             </div>
         </div>
 </div>
-
         <!-- @if(isset($search) && $search !== 'null')
         {{collect($tasks)->where('title','like',"%$search%") }}
         @endif  -->
