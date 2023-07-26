@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
-use Mail;
-use App\Mail\NewMail;
+use App\Models\User;
 use App\Http\Requests\UserStoreRequest;
 use Carbon\Carbon;
-
+use Illuminate\Support\Str;
+use App\Jobs\AdminUpdateJob;
 
 class HomeController extends Controller
 {
@@ -30,10 +30,6 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        // $tasks = $user->is_Admin ? Task::latest()->get() : $user->tasks;
-        // dd(Task::where('user_id', $user->id));
-
-        // dd(auth()->user()->email);
 
         return view('tasks.index', ['tasks' => $user->tasks]);
     }
@@ -57,13 +53,6 @@ class HomeController extends Controller
             'due_date' => $carbonDate
         ]);
         
-        // $mailData = [
-        //     'title' => $request->title,
-        //     'body' => $request->description
-        // ];
-        
-        // Mail::to(auth()->user()->email)->send(new NewMail($mailData));
-        // dd('Email sent!');
         return back()->withSuccess('Product Created !!');
 
     }
@@ -100,11 +89,23 @@ class HomeController extends Controller
 
         $carbonDate = Carbon::parse($theDate);
 
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->due_date = $carbonDate;
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'due_date' => $carbonDate
+        ]);
 
-        $task->save();
+        // Finding admins
+        $users = User::where('type', 1);
+        $emails = $users->pluck('email')->toArray();
+
+        $id = $task->id;
+
+        // Getting the base url
+        $currentUrl = url()->current();
+        $defaultUrl = Str::before($currentUrl, '/tasks');
+
+        AdminUpdateJob::dispatch($emails, $id, $defaultUrl);
 
         return back()->withSuccess('Product Updated !!');
     }

@@ -9,7 +9,10 @@ use Mail;
 use App\Mail\NewMail;
 use App\Http\Requests\AdminStoreRequest;
 use App\Jobs\SendEmailJob;
+use App\Jobs\UpdateMailJob;
+use App\Jobs\DeleteMailJob;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -21,6 +24,7 @@ class AdminController extends Controller
     public function adminHome()
     {
         $tasks = Task::latest()->paginate(8);
+
         return view('admin.adminHome', ['tasks' => $tasks]);
     }
 
@@ -36,7 +40,7 @@ class AdminController extends Controller
 
         $carbonDate = Carbon::parse($theDate);
        
-        $ticket = Task::create([
+        $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
             'user_id' => $request->user_id,
@@ -48,12 +52,10 @@ class AdminController extends Controller
             'body' => $request->description
         ];
 
-        $address = User::where('id', $request->user_id)->first()->email;
-        // dd($theUser);
+        $address = $task->user->email;
 
         SendEmailJob::dispatch($mailData, $address);
 
-        // Mail::to('rahul@zethic.com')->send(new NewMail($mailData));
         return back()->withSuccess('Product Created !!');
 
     }
@@ -62,6 +64,7 @@ class AdminController extends Controller
     public function show($id){
 
         $task = Task::where('id',$id)->first();
+        // dd($task->user->email);
 
         return view('admin.show', ['task' => $task]);
     }
@@ -78,6 +81,13 @@ class AdminController extends Controller
         $task = Task::where('id',$id)->first();
 
         $task->delete();
+
+        $address = $task->user->email;
+
+        $title = $task->title;
+
+        DeleteMailJob::dispatch($title, $address);
+
         return back()->withSuccess('Product Deleted !!');
     }
 
@@ -85,27 +95,34 @@ class AdminController extends Controller
         
         $validated = $request->validated();
 
-        $task = Task::where('id',$id)->first();
-
+        
         $theDate = $request->due_date;
-
+        
         $carbonDate = Carbon::parse($theDate);
 
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->user_id = $request->user_id;
-        $task->due_date = $carbonDate;
+        $task = Task::where('id',$id)->first();
 
-        $task->save();
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => $request->user_id,
+            'due_date' => $carbonDate
+        ]);
 
         $mailData = [
             'title' => 'Task Updated',
             'body' => 'The task '.($request->title ?? $task->title).' has been updated by the admin.'
         ];
 
-        $address = User::where('id', ($request->user_id ?? $task->user_id))->first()->email;
+        $address = $task->user->email;
 
-        SendEmailJob::dispatch($mailData, $address);
+        $id = $task->id;
+
+        // Getting the base url
+        $currentUrl = url()->current();
+        $defaultUrl = Str::before($currentUrl, '/admin');
+
+        UpdateMailJob::dispatch($mailData, $address, $id, $defaultUrl);
 
         return back()->withSuccess('Product Updated !!');
     }

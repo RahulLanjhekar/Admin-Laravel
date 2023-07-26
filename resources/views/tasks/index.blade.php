@@ -5,9 +5,7 @@
 <div class='search-div'>
 
         <div class="row py-2"></div>
-        <div class="col-md-6">
-            <a href="tasks/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
-        </div>
+        
 
         <div class="col-md-6 mb-2">
             <div class="form-group">
@@ -19,6 +17,10 @@
                 </form>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <a href="tasks/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
+        </div>
 </div>
         <!-- @if(isset($search) && $search !== 'null')
         {{collect($tasks)->where('title','like',"%$search%") }}
@@ -29,12 +31,8 @@
            
                     <div class="card-container">
                         <div class="inside-card">
-                            <h2>Id:- {{ $task->id}}</h2>
-                        </div>
-
-                        <div class="inside-card">
                             <h2>Title</h2>
-                            <h2><a href="/tasks/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></h2>
+                            <h1><a href="/tasks/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></h1>
                         </div>
 
                         <div class="inside-card">
@@ -43,11 +41,14 @@
                         </div>
 
                         <div class="inside-card">
+                            <h2>Id:- {{ $task->id}}</h2>
+                        </div>
+
+                        <div class="inside-card">
                             <h3>Due Date:- {{ $task->due_date ?? 'null'}}</h3>
                         </div>
 
                         <div class="action-card">
-                            <h2>Action</h2>
                             <a href="/tasks/{{$task->id}}/edit" class='btn btn-dark action-btns btn-sm'>Edit</a>
                             <form method='POST' action="/tasks/{{$task->id}}/delete" class='d-inline'>
                                 @csrf

@@ -9,22 +9,27 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mail;
-use App\Mail\NewMail;
+use App\Mail\UpdateMail;
 
-class SendEmailJob implements ShouldQueue
+class UpdateMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    protected $mailData;
-    protected $address;
 
-    public function __construct($mailData, $address)
+     protected $mailData;
+    protected $address;
+    protected $id;
+    protected $defaultUrl;
+
+    public function __construct($mailData, $address, $id, $defaultUrl)
     {
         $this->mailData = $mailData;
         $this->address = $address;
+        $this->id = $id;
+        $this->defaultUrl = $defaultUrl;
     }
 
     /**
@@ -32,6 +37,6 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-            Mail::to($this->address)->send(new NewMail($this->mailData));        
+        Mail::to($this->address)->send(new UpdateMail($this->mailData, $this->id, $this->defaultUrl));
     }
 }

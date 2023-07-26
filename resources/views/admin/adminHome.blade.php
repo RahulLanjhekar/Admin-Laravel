@@ -4,9 +4,6 @@
 <div class="container main-container bg-white">
     <div class='search-div'>
         <div class="row py-2"></div>
-        <div class="col-md-6">
-            <a href="/admin/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
-        </div>
 
         <div class="col-md-6 mb-2">
             <div class="form-group">
@@ -18,6 +15,11 @@
                 </form>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <a href="/admin/create" class='btn btn-dark mt-2 top-btns'>New Task</a>
+        </div>
+        
         </div>
 
         <!-- @if(isset($search) && $search !== 'null')
@@ -29,17 +31,17 @@
            
                     <div class="card-container">
                         <div class="inside-card">
-                            <h2>Id:- {{ $task->id}}</h2>
+                            <h2>Title:-</h2>
+                            <h1><a href="/admin/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></h1>
                         </div>
 
                         <div class="inside-card">
-                            <h2>Title</h2>
-                            <h2><a href="/admin/{{$task->id}}/show" class='text-dark'>{{ $task->title}}</a></h2>
-                        </div>
-
-                        <div class="inside-card">
-                            <h2>Description</h2>
+                            <h2>Description:-</h2>
                             <h2>{{ $task->description}}</h2>
+                        </div>
+
+                        <div class="inside-card">
+                            <h2>Id:- {{ $task->id}}</h2>
                         </div>
 
                         <div class="inside-card">
